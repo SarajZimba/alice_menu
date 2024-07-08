@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
-CUSTOM_APPS = ["api", "user", "order"]
+CUSTOM_APPS = ["api", "user", "order", "menu"]
 
 THIRD_PARTY_APPS = ["rest_framework" , "rest_framework_simplejwt",
     "corsheaders",]
@@ -121,7 +121,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "/staticfiles/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
+MEDIA_URL = "/uploads/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
