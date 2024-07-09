@@ -141,9 +141,9 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.BasicAuthentication',    # For API clients
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    'DEFAULT_PERMISSION_CLASSES': (   
-        'rest_framework.permissions.IsAuthenticated',  # Restrict access to authenticated users
-    ),
+    # 'DEFAULT_PERMISSION_CLASSES': (   
+    #     'rest_framework.permissions.IsAuthenticated',  # Restrict access to authenticated users
+    # ),
 }
 
 EMAIL_BACKEND = env('EMAIL_BACKEND')
