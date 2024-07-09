@@ -8,8 +8,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 class Menu(BaseModel):
     # item_name, group, type, price, d_exempt, restaurant/outlet, image, is_promotional, is_today-special
     item_name = models.CharField(max_length=255)
-    group = models.CharField(max_length=255)
-    type = models.CharField(max_length=255)
+    group = models.CharField(max_length=255)   
     type = models.CharField(max_length=255)
     price = models.FloatField(default=0.0)
     outlet = models.CharField(max_length=255)
@@ -17,7 +16,7 @@ class Menu(BaseModel):
     is_promotional = models.BooleanField(default=False)
     is_todayspecial = models.BooleanField(default=False)
     thumbnail = models.ImageField(upload_to='thumbnails/', blank=True, null=True)
-
+    image_bytes = models.TextField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.thumbnail = self.generate_thumbnail()
