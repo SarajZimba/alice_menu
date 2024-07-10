@@ -3,12 +3,35 @@ from rest_framework.response import Response
 from menu.models import Menu
 from api.serializers.menu import MenuSerializerCreate, MenuSerializerList
 
+class MenuTypeWiseListView(APIView):
+    def get(self, request, *args, **kwargs):
+        outlet_name = kwargs.get('outlet_name')
+
+        promotional_menus = Menu.objects.filter(status=True,is_deleted=False, outlet=outlet_name, is_promotional=True)[:5]
+        todayspecial_menus = Menu.objects.filter(status=True,is_deleted=False, outlet=outlet_name, is_todayspecial=True)[:5]
+        try:    
+            promotional_serializer = MenuSerializerList(promotional_menus, many=True)
+            todayspecial_serializer = MenuSerializerList(todayspecial_menus, many=True)
+            data = {
+                "promotional": promotional_serializer.data,
+                "todayspecial": todayspecial_serializer.data
+            }
+            return Response(data, 200)
+
+        except Exception as e:
+            print(e)
+            return Response("Something went wrong", 400)
+        
 class MenuListView(APIView):
     def get(self, request, *args, **kwargs):
         outlet_name = kwargs.get('outlet_name')
+
         menus = Menu.objects.filter(status=True,is_deleted=False, outlet=outlet_name)
+        # promotional_menus = Menu.objects.filter(status=True,is_deleted=False, outlet=outlet_name, is_promotional=True)[:5]
+        # todayspecial_menus = Menu.objects.filter(status=True,is_deleted=False, outlet=outlet_name, is_todayspecial=True)[:5]
         try:    
             serializer = MenuSerializerList(menus, many=True)
+            # todayspecial_serializer = MenuSerializerList(todayspecial_menus, many=True)
             data = serializer.data
             return Response(data, 200)
 
@@ -59,6 +82,11 @@ class MenuCreateAPIView(APIView):
         datas = request.data  # Create a mutable copy of the request data
         outlet = kwargs.get('outlet_name')
         try:
+            menus = Menu.objects.filter(status=True,is_deleted=False, outlet=outlet)
+            menus.delete()
+        except Exception as e:
+            print(e)
+        try:
             for data in datas:
                 # data = data.copy()
                 type = data.get('type', None)
@@ -104,3 +132,6 @@ class ImageByteView(APIView):
                 'image': menu.image_bytes 
             }
         return Response(dict, 200)
+
+
+# Save the image in bytes and then again return the same bytes
