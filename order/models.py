@@ -14,6 +14,7 @@ class Order(BaseModel):
     discounts = models.CharField(max_length=255, null=True)
     date = models.DateField(null=True)
     barItem = models.CharField(max_length=10, null=True) 
+    outlet = models.CharField(max_length = 100, null=True)
 
 class OrderDetails(BaseModel):
     order = models.ForeignKey(Order, null=True, on_delete=models.CASCADE)

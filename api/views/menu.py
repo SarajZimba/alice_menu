@@ -5,8 +5,9 @@ from api.serializers.menu import MenuSerializerCreate, MenuSerializerList
 
 class MenuListView(APIView):
     def get(self, request, *args, **kwargs):
-        menus = Menu.objects.filter(status=True,is_deleted=False)
-        try:
+        outlet_name = kwargs.get('outlet_name')
+        menus = Menu.objects.filter(status=True,is_deleted=False, outlet=outlet_name)
+        try:    
             serializer = MenuSerializerList(menus, many=True)
             data = serializer.data
             return Response(data, 200)
@@ -56,6 +57,7 @@ class MenuCreateAPIView(APIView):
     def post(self, request, *args, **kwargs):
         print(f"This is the {request.data}")
         datas = request.data  # Create a mutable copy of the request data
+        outlet = kwargs.get('outlet_name')
         try:
             for data in datas:
                 # data = data.copy()
@@ -78,7 +80,7 @@ class MenuCreateAPIView(APIView):
                     'thumbnail': image,  # Add the image to the menu data
                     'discount_exempt':discount_exempt,
                     'type':type,
-                    'outlet': 'Alice',
+                    'outlet': outlet,
                     'image_bytes':image_bytes
                 }
                 

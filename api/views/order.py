@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from api.serializers.order import OrderDetailsSerializer,OrderSerializer
+from api.serializers.order import OrderDetailsSerializer,OrderSerializer, CustomOrderWithOrderDetailsSerializer
 from django.db import transaction
 from order.models import Order, OrderDetails
 
@@ -10,7 +10,7 @@ from rest_framework.permissions import AllowAny
 
 class OrderCreateAPIView(APIView):
     permission_classes = [AllowAny]
-    def post(self, request, format=None):
+    def post(self, request, format=None, *args, **kwargs):
         order_serializer = OrderSerializer(data=request.data)
         if order_serializer.is_valid():
             order = order_serializer.save()
@@ -70,3 +70,13 @@ class OrderCreateAPIView(APIView):
             
         else:
             return Response(order_details_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    
+class OrderListView(APIView):
+    def get(self, request, *args, **kwargs):
+        outlet_name = kwargs.get('outlet_name')
+        orders = Order.objects.filter(outlet=outlet_name)
+
+        serializer = CustomOrderWithOrderDetailsSerializer(orders, many=True)
+
+        return Response(serializer.data, 200)

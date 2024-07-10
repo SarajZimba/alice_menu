@@ -3,6 +3,7 @@ from django.db import models
 from PIL import Image
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.utils.text import slugify
 # Create your models here.
 
 class Menu(BaseModel):
@@ -21,6 +22,10 @@ class Menu(BaseModel):
     def save(self, *args, **kwargs):
         self.thumbnail = self.generate_thumbnail()
 
+        #This is to generate the slug for sending it in the api
+        self.slug = slugify(self.item_name)
+
+
         super().save(*args, **kwargs)
 
     def generate_thumbnail(self, thumbnail_size=(100, 100)):
@@ -34,3 +39,5 @@ class Menu(BaseModel):
             return thumbnail_file
         else:
             return None
+        
+
